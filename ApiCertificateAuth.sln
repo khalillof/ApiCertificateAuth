@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32421.90
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiCertificateAuth", "ApiCertificateAuth\ApiCertificateAuth.csproj", "{BE7C7B06-B9D1-427C-B759-7EE99AEC4AD5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BE7C7B06-B9D1-427C-B759-7EE99AEC4AD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE7C7B06-B9D1-427C-B759-7EE99AEC4AD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE7C7B06-B9D1-427C-B759-7EE99AEC4AD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE7C7B06-B9D1-427C-B759-7EE99AEC4AD5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {82B8FC56-2764-4C17-96A0-3743215B249B}
+	EndGlobalSection
+EndGlobal
