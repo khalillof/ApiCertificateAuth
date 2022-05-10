@@ -2,24 +2,18 @@ using ApiCertificateAuth;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.AspNetCore.Server.Kestrel.Https;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
-//builder.WebHost.ConfigureKestrel(c => {
-//    c.ConfigureHttpsDefaults(o => o.ClientCertificateMode = ClientCertificateMode.RequireCertificate);
-//});
+
+
 builder.Services.Configure<KestrelServerOptions>(opts =>
  {
      opts.ConfigureHttpsDefaults(options => options.ClientCertificateMode = ClientCertificateMode.RequireCertificate);
  });
-
-// add certificate services
-builder.Services.AddCertificateAuthetication();
-
 // Add services to the container.
 builder.Services.AddControllers();
 
-
+builder.Services.AddCertificateAuthetication();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

@@ -18,6 +18,8 @@ namespace ApiCertificateAuth.Controllers
         public WeatherForecastController(ILogger<WeatherForecastController> logger)
         {
             _logger = logger;
+            //var name = HttpContext.User?.Identity?.Name;
+           // _logger.LogInformation($"Test API call successful! Certificate Subject Name: {name}");
         }
 
         [HttpGet(Name = "GetWeatherForecast")]

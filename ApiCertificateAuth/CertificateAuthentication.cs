@@ -14,7 +14,6 @@ namespace ApiCertificateAuth
             services.AddAuthentication(CertificateAuthenticationDefaults.AuthenticationScheme)
                 .AddCertificate(options =>
                 {
-                    //options.RevocationMode = X509RevocationMode.NoCheck;
                     options.AllowedCertificateTypes = CertificateTypes.All;
 
                     options.Events = new CertificateAuthenticationEvents
@@ -23,8 +22,10 @@ namespace ApiCertificateAuth
                         {
                         var validationService = context.HttpContext.RequestServices.GetRequiredService<IX509CertificateAuthValidation>();
 
+
                             if (validationService.ValidateCertificate(context.ClientCertificate))
                             {
+                                
                                 var claims = new[]
                                 {
                         new Claim(
@@ -35,10 +36,10 @@ namespace ApiCertificateAuth
                             ClaimTypes.Name,
                             context.ClientCertificate.Subject,
                             ClaimValueTypes.String, context.Options.ClaimsIssuer)
-                    };
+                           };
 
-                                context.Principal = new ClaimsPrincipal(
-                                    new ClaimsIdentity(claims, context.Scheme.Name));
+                            context.Principal = new ClaimsPrincipal(new ClaimsIdentity(claims, context.Scheme.Name));
+                            
                                 context.Success();
                             }
                             else
@@ -53,6 +54,12 @@ namespace ApiCertificateAuth
                         }
                     };
 
+                })
+               // ASP.NET Core 5.0 and later versions support the ability to enable caching of validation results. The caching dramatically improves performance of certificate authentication, as validation is an expensive operation.
+                .AddCertificateCache(options =>
+                {
+                    options.CacheSize = 1024;
+                    options.CacheEntryExpiration = TimeSpan.FromMinutes(2);
                 });
 
             services.AddAuthorization();

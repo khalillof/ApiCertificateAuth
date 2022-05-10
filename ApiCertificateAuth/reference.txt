@@ -1,0 +1,61 @@
+﻿https://docs.microsoft.com/en-us/aspnet/core/security/authentication/certauth?view=aspnetcore-6.0
+
+# pwershell commands for issuing dev certificates 
+# Open “Power Shell” as an administrator and run the below command:
+
+New-SelfSignedCertificate -DnsName "localhost", "localhost" `
+-CertStoreLocation "cert:\LocalMachine\My" `
+-NotAfter (Get-Date).AddYears(10) `
+-FriendlyName "CAlocalhost" `
+-KeyUsageProperty All -KeyUsage CertSign, CRLSign, DigitalSignature
+
+# out come as follow:
+Thumbprint                                Subject
+----------                                -------
+E1C8B70E73FDBF6A7230E0C48D793EE37118E168  CN=localhost
+
+# keep copy of the Thumbprint identifier
+
+#Next, set a password as below:
+
+$mypwd = ConvertTo-SecureString -String "devServer12345" -Force -AsPlainText
+
+#The final step is to generate a PFX file for the certificate. We do this using the below command,
+
+Get-ChildItem -Path cert:\localMachine\my\E1C8B70E73FDBF6A7230E0C48D793EE37118E168 | Export-PfxCertificate -FilePath "C:\Users\your_username\projects\ApiCertificateAuth\ApiCertificateAuth\ApiCertificateAuth.pfx" -Password $mypwd
+
+# Now, the PFX file has been generated. Before we add the CA certificate to our machine certificates, 
+# let us generate the client certificate from it.  will then provide this certificate to the client to attach with each request
+
+#First run the below command using the thumbprint of the brevious CA certificate.
+$rootcert = ( Get-ChildItem -Path cert:\LocalMachine\My\E1C8B70E73FDBF6A7230E0C48D793EE37118E168 )
+
+# Then follow with the below command:
+
+New-SelfSignedCertificate -certstorelocation cert:\localmachine\my -dnsname "localhost" -Signer $rootcert -NotAfter (Get-Date).AddYears(10) -FriendlyName "Clientlocalhost"
+
+# outcome for the client certificate, keep reference for Thumbprint 
+   PSParentPath: Microsoft.PowerShell.Security\Certificate::LocalMachine\my
+
+Thumbprint                                Subject
+----------                                -------
+D7CBC1CBAE8FB83C17661EF4398C18DB5375260A  CN=localhost
+
+#Next, create a password to be used with the client certificate as below,
+
+$mypwd = ConvertTo-SecureString -String "Client123456" -Force -AsPlainText
+
+# Finally, create the PFX file for the client certificate as below using the thumbprint of the client certificate.
+
+Get-ChildItem -Path cert:\localMachine\my\D7CBC1CBAE8FB83C17661EF4398C18DB5375260A | Export-PfxCertificate -FilePath "C:\Users\username/projects\ApiCertificateAuthClient\ApiCertificateAuthClient\ApiCertificateAuthClient.pfx" -Password $mypwd
+
+# outcome client cert created and located in the path specified
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        10/05/2022     14:49           3589 ApiCertificateAuthClient.pfx
+
+# now we need to trust the certificates Let us now add the CA certificate to our machine. Click Start and type  "Manage Computer Certificates"
+# Select “Trusted Root Certification Authorities- Certificates – All Tasks- Import” and add the “cacert.pfx” to it.
+
+#You will be asked to provide the password. Here provide the password used to generate the “ApiCertificateAuth.pfx” file. After the import is done, you will see the below entry in the “Trusted Root Certification Authorities- Certificates”.
